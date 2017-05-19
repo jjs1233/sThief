@@ -34,7 +34,7 @@ def log(pro):
 	logger.info(pro)
 
 def rain_english_name(pro):
-	return pro.find("h1",itemprop="name").get_text()
+	return pro.find("h1",itemprop="name").get_text().replace(' ','-').lower()
 
 def rain_logo(pro,name):
 	l = pro.find(itemprop="logo").get('src')
