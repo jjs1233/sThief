@@ -20,7 +20,6 @@ def belt_jar():
 	jar = p_session.query(Furtum).filter(Furtum.touch == False).limit(10).all()
 	for i,v in enumerate(jar):
 		v.mdb_session = m_s_l[i]
-		v.pg_session = p_s_l[i]
 	return jar
 
 def rain_name(pro):
@@ -34,13 +33,13 @@ def log(pro):
 	logger.info(pro)
 
 def rain_english_name(pro):
-	return pro.find("h1",itemprop="name").get_text().replace(' ','-').lower()
+	return pro.find("h1",itemprop="name").get_text()
 
 def rain_logo(pro,name):
 	l = pro.find(itemprop="logo").get('src')
-	t = name+"-logo"+GetFileNameAndExt(l)[1]
+	t = name.replace(' ','-').lower()+"-logo"+GetFileNameAndExt(l)[1]
 	img_down(Address+l,Logobox,t)
-	return Logobox+t
+	return t
 
 def rain_address(pro):
 	return pro.find(itemprop="address").select(".borderless tr td")[0].get_text().replace("\n"," ")
@@ -56,9 +55,9 @@ def rain_website_url(pro):
 
 def rain_website_image(pro,name):
 	l = pro.select(".borderless .img-responsive")[0].get('src')
-	t = name+"-website"+GetFileNameAndExt(l)[1]
+	t = name.replace(' ','-').lower()+"-website"+GetFileNameAndExt(l)[1]
 	img_down(Address+l,Website_img_box,t)
-	return Website_img_box+t
+	return t
 
 def rain_acronym(pro):
 	return pro.find('abbr').get_text()
@@ -140,8 +139,6 @@ def rain_shot(pro):
 		finally:
 			pro.touch = True
 	finally:
-		pro.pg_session.flush()
-		pro.pg_session.commit()
 		if tar:
 			pro.mdb_session.flush()
 			pro.mdb_session.commit()
@@ -149,6 +146,9 @@ def rain_shot(pro):
 def rain():
 	while belt_jar():
 		tp.map(rain_shot,belt_jar())
+		p_session.flush()
+		p_session.commit()
+
 
 rain()
 

@@ -28,6 +28,6 @@ class Uni(m_Base):
 	website_url = Column(Text)
 	website_image = Column(Text)
 	acronym = Column(Text)
-	country_rank = Column(Text)
-	world_rank = Column(Text)
+	country_rank = Column(Integer)
+	world_rank = Column(Integer)
 	wikipedia_url = Column(Text)
